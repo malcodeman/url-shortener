@@ -8,11 +8,13 @@ import {
   FormLabel,
   Heading,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import axios from "axios";
 
 const defaultValues = {
   longUrl: "",
@@ -28,9 +30,22 @@ const schema = yup
 
 const Home: NextPage = () => {
   const form = useForm({ defaultValues, resolver: yupResolver(schema) });
+  const toast = useToast();
 
-  const handleOnSubmit = (values: { longUrl: string }) => {
-    console.log(values);
+  const handleOnSubmit = async (values: { longUrl: string }) => {
+    try {
+      await axios.post("/api/urls", values);
+      form.reset();
+    } catch (err) {
+      if (err instanceof Error) {
+        toast({
+          description: err.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    }
   };
 
   return (
