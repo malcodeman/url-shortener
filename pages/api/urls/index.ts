@@ -10,13 +10,13 @@ const defaultExport = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (method) {
       case "POST":
         await prisma.$connect();
-        await prisma.url.create({
+        const resp = await prisma.url.create({
           data: {
             id: nanoid(8),
             originalUrl: body.longUrl,
           },
         });
-        return res.status(200).json("Success");
+        return res.status(200).json(resp);
       default:
         res.setHeader("Allow", ["POST"]);
         return res.status(405).end(`Method ${method} Not Allowed`);
