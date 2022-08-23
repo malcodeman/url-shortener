@@ -17,6 +17,10 @@ yarn install
 yarn dev
 ```
 
+## Environment variables
+
+[Prisma](https://www.prisma.io/docs/reference/database-reference/connection-urls#env) needs a connection URL to be able to connect to your database.
+
 ## Testing
 
 ```
