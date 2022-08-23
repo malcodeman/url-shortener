@@ -31,3 +31,5 @@ describe("Form", () => {
     cy.contains("URL needs to be valid");
   });
 });
+
+export {};
