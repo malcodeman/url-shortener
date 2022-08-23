@@ -7,6 +7,7 @@ import {
   Flex,
   Grid,
   Heading,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useLocalStorageValue } from "@react-hookz/web";
@@ -17,6 +18,7 @@ import { useSWRConfig } from "swr";
 import { Url } from "../types";
 import LinkDetails from "../components/LinkDetails";
 import ShortUrlForm from "../components/ShortUrlForm";
+import ColorModeToggle from "../components/ColorModeToggle";
 
 const Home: NextPage = () => {
   const [urls] = useLocalStorageValue<undefined | Url[]>("urls", [], {
@@ -29,6 +31,10 @@ const Home: NextPage = () => {
     `1fr ${hasLinks ? "365px" : "auto"}`,
   ];
   const { mutate } = useSWRConfig();
+  const borderColor = useColorModeValue(
+    "rgba(0,0,0,0.1)",
+    "rgba(255,255,255,0.1)"
+  );
 
   const handleOnRefreshClicks = async () => {
     if (urls) {
@@ -41,7 +47,7 @@ const Home: NextPage = () => {
       height={["auto", "auto", "100vh"]}
       gridTemplateColumns={gridTemplateColumns}
     >
-      <Center paddingY="4">
+      <Center paddingTop="16">
         <Container>
           <Box>
             <Heading fontSize="2xl" mb="4" textAlign="center">
@@ -55,7 +61,7 @@ const Home: NextPage = () => {
         <Container
           overflowY="auto"
           paddingY="4"
-          borderLeft={["none", "none", "1px solid rgba(0,0,0,0.1)"]}
+          borderLeft={["none", "none", `1px solid ${borderColor}`]}
           style={{ scrollbarWidth: "thin" }}
         >
           <Flex mb="4" justifyContent="space-between" alignItems="center">
@@ -82,6 +88,7 @@ const Home: NextPage = () => {
           )}
         </Container>
       ) : null}
+      <ColorModeToggle />
     </Grid>
   );
 };
