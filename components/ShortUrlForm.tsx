@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Button,
   FormControl,
@@ -35,9 +36,11 @@ function ShortUrlForm() {
   const [urls, setUrls] = useLocalStorageValue<undefined | Url[]>("urls", [], {
     initializeWithStorageValue: false,
   });
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleOnSubmit = async (values: { longUrl: string; alias: string }) => {
     try {
+      setIsLoading(true);
       const resp = await axios.post("/api/urls", values);
       if (urls) {
         setUrls([...urls, resp.data]);
@@ -61,6 +64,8 @@ function ShortUrlForm() {
           });
         }
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -94,6 +99,7 @@ function ShortUrlForm() {
         </FormControl>
       </Grid>
       <Button
+        isLoading={isLoading}
         type="submit"
         width="full"
         colorScheme="blue"
