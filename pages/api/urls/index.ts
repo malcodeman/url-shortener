@@ -10,9 +10,10 @@ const defaultExport = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (method) {
       case "POST":
         await prisma.$connect();
+        const id = body.alias || nanoid(8);
         const resp = await prisma.url.create({
           data: {
-            id: nanoid(8),
+            id,
             originalUrl: body.longUrl,
             clicks: 0,
           },
@@ -22,8 +23,11 @@ const defaultExport = async (req: NextApiRequest, res: NextApiResponse) => {
         res.setHeader("Allow", ["POST"]);
         return res.status(405).end(`Method ${method} Not Allowed`);
     }
-  } catch {
+  } catch (err) {
     await prisma.$disconnect();
+    if (err instanceof Error) {
+      return res.status(500).json(err.message);
+    }
     return res.status(500).send("Something broke!");
   }
 };
