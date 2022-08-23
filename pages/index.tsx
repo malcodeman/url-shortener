@@ -4,6 +4,7 @@ import {
   Button,
   Center,
   Container,
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -19,6 +20,8 @@ import * as yup from "yup";
 import axios from "axios";
 import { useLocalStorageValue } from "@react-hookz/web";
 import { map } from "ramda";
+import { FiRefreshCw } from "react-icons/fi";
+import { useSWRConfig } from "swr";
 
 import LinkDetails from "../components/LinkDetails";
 
@@ -53,6 +56,7 @@ const Home: NextPage = () => {
     "1fr",
     `1fr ${hasLinks ? "365px" : "auto"}`,
   ];
+  const { mutate } = useSWRConfig();
 
   const handleOnSubmit = async (values: { longUrl: string }) => {
     try {
@@ -70,6 +74,12 @@ const Home: NextPage = () => {
           isClosable: true,
         });
       }
+    }
+  };
+
+  const handleOnRefreshClicks = async () => {
+    if (urls) {
+      map((item) => mutate(`/api/urls/${item.id}`), urls);
     }
   };
 
@@ -112,9 +122,17 @@ const Home: NextPage = () => {
           borderLeft={["none", "none", "1px solid rgba(0,0,0,0.1)"]}
           style={{ scrollbarWidth: "thin" }}
         >
-          <Heading fontSize="xl" mb="4">
-            Links
-          </Heading>
+          <Flex mb="4" justifyContent="space-between" alignItems="center">
+            <Heading fontSize="xl">Links</Heading>
+            <Button
+              size="sm"
+              leftIcon={<FiRefreshCw />}
+              onClick={handleOnRefreshClicks}
+            >
+              Refresh clicks
+            </Button>
+          </Flex>
+
           {map(
             (item) => (
               <LinkDetails
@@ -122,7 +140,6 @@ const Home: NextPage = () => {
                 id={item.id}
                 originalUrl={item.originalUrl}
                 createdAt={item.createdAt}
-                initialClicks={item.clicks}
               />
             ),
             urls
