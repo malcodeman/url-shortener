@@ -7,6 +7,7 @@ import {
   Button,
   Divider,
   useDisclosure,
+  Stack,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import axios from "axios";
@@ -16,6 +17,11 @@ import { ImQrcode } from "react-icons/im";
 import utils from "../lib/utils";
 import ClipboardInput from "./ClipboardInput";
 import QrCodeModal from "./QrCodeModal";
+import { FiEyeOff } from "react-icons/fi";
+import { useLocalStorageValue } from "@react-hookz/web";
+import { filter } from "ramda";
+
+import { Url } from "../types";
 
 type Props = {
   id: string;
@@ -42,6 +48,22 @@ function LinkDetails(props: Props) {
       },
     }
   );
+  const [urls, setUrls] = useLocalStorageValue<undefined | Url[]>("urls", [], {
+    initializeWithStorageValue: false,
+  });
+
+  const handleOnDelete = () => {
+    if (urls) {
+      const newUrls = filter((item) => item.id !== id, urls);
+      setUrls(newUrls);
+      toast({
+        description: `Link ${id} hidden`,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <Box mb="4">
@@ -56,9 +78,19 @@ function LinkDetails(props: Props) {
       <Divider marginY="2" />
       <Text fontSize="sm">Clicks: {data?.data.clicks}</Text>
       <Divider marginY="2" />
-      <Button leftIcon={<ImQrcode />} size="sm" onClick={qrCodeModal.onOpen}>
-        QR Code
-      </Button>
+      <Stack>
+        <Button leftIcon={<ImQrcode />} size="sm" onClick={qrCodeModal.onOpen}>
+          QR Code
+        </Button>
+        <Button
+          leftIcon={<FiEyeOff />}
+          size="sm"
+          variant="ghost"
+          onClick={handleOnDelete}
+        >
+          Hide
+        </Button>
+      </Stack>
       <QrCodeModal
         isOpen={qrCodeModal.isOpen}
         value={clipboardValue}
