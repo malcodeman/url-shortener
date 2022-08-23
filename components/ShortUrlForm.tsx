@@ -72,20 +72,33 @@ function ShortUrlForm() {
       <Grid gridTemplateColumns={["1fr", "3fr 1fr"]} gridGap="2" mb="2">
         <FormControl isInvalid={Boolean(form.formState.errors.longUrl)}>
           <FormLabel>Long URL</FormLabel>
-          <Input {...form.register("longUrl")} variant="filled" />
+          <Input
+            {...form.register("longUrl")}
+            variant="filled"
+            data-test-id="long-url-input"
+          />
           <FormHelperText>
             {form.formState.errors.longUrl?.message}
           </FormHelperText>
         </FormControl>
         <FormControl isInvalid={Boolean(form.formState.errors.alias)}>
           <FormLabel>Alias</FormLabel>
-          <Input {...form.register("alias")} variant="filled" />
+          <Input
+            {...form.register("alias")}
+            variant="filled"
+            data-test-id="alias-input"
+          />
           <FormHelperText>
             {form.formState.errors.alias?.message}
           </FormHelperText>
         </FormControl>
       </Grid>
-      <Button type="submit" width="full" colorScheme="blue">
+      <Button
+        type="submit"
+        width="full"
+        colorScheme="blue"
+        data-test-id="shorten-it-button"
+      >
         Shorten it
       </Button>
     </form>
