@@ -1,23 +1,27 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { nanoid } from "nanoid";
 
 const prisma = new PrismaClient();
 
 const defaultExport = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { method, body } = req;
+    const { method, query } = req;
     switch (method) {
-      case "POST":
+      case "GET":
         await prisma.$connect();
-        const resp = await prisma.url.create({
-          data: {
-            id: nanoid(8),
-            originalUrl: body.longUrl,
-            clicks: 0,
-          },
-        });
-        return res.status(200).json(resp);
+        const id = query.id;
+        if (typeof id === "string") {
+          const url = await prisma.url.findUnique({
+            where: {
+              id,
+            },
+          });
+          if (url) {
+            return res.status(200).json(url);
+          }
+          return res.status(404).send("URL not found!");
+        }
+        return res.status(404).send("URL not found!");
       default:
         res.setHeader("Allow", ["POST"]);
         return res.status(405).end(`Method ${method} Not Allowed`);

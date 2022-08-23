@@ -1,5 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { PrismaClient } from "@prisma/client";
+import { inc } from "ramda";
 
 const Url: NextPage = () => {
   return <div>404</div>;
@@ -18,6 +19,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         },
       });
       if (url) {
+        await prisma.url.update({
+          where: {
+            id,
+          },
+          data: {
+            clicks: inc(url.clicks),
+          },
+        });
         return {
           redirect: {
             destination: url.originalUrl,

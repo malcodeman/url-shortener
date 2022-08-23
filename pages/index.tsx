@@ -7,11 +7,9 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Grid,
   Heading,
   Input,
-  Link,
-  Stack,
-  Text,
   useToast,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
@@ -22,9 +20,13 @@ import axios from "axios";
 import { useLocalStorageValue } from "@react-hookz/web";
 import { map } from "ramda";
 
+import LinkDetails from "../components/LinkDetails";
+
 type Url = {
   id: string;
   originalUrl: string;
+  createdAt: string;
+  clicks: number;
 };
 
 const defaultValues = {
@@ -45,6 +47,12 @@ const Home: NextPage = () => {
   const [urls, setUrls] = useLocalStorageValue<undefined | Url[]>("urls", [], {
     initializeWithStorageValue: false,
   });
+  const hasLinks = urls?.length;
+  const gridTemplateColumns = [
+    "1fr",
+    "1fr",
+    `1fr ${hasLinks ? "365px" : "auto"}`,
+  ];
 
   const handleOnSubmit = async (values: { longUrl: string }) => {
     try {
@@ -66,51 +74,62 @@ const Home: NextPage = () => {
   };
 
   return (
-    <Center minH="100vh">
-      <Container maxW="365px">
-        <Box>
-          <Heading fontSize="2xl" mb="4" textAlign="center">
-            Top TIER Shortener
-          </Heading>
-          <form
-            style={{ marginBottom: "var(--chakra-space-4)" }}
-            onSubmit={form.handleSubmit(handleOnSubmit)}
-          >
-            <FormControl
-              isInvalid={Boolean(form.formState.errors.longUrl)}
-              mb="2"
-            >
-              <FormLabel>Long URL</FormLabel>
-              <Input {...form.register("longUrl")} />
-              <FormHelperText>
-                {form.formState.errors.longUrl?.message}
-              </FormHelperText>
-            </FormControl>
-            <Button type="submit" width="full" colorScheme="blue">
-              Shorten it
-            </Button>
-          </form>
+    <Grid
+      height={["auto", "auto", "100vh"]}
+      gridTemplateColumns={gridTemplateColumns}
+    >
+      <Center paddingY="4">
+        <Container>
           <Box>
-            <Text>Your URLs</Text>
-            {urls
-              ? map(
-                  (item) => (
-                    <Stack key={item.id}>
-                      <Link
-                        isExternal
-                        href={`${window.location.href}/${item.id}`}
-                      >
-                        {item.id}
-                      </Link>
-                    </Stack>
-                  ),
-                  urls
-                )
-              : null}
+            <Heading fontSize="2xl" mb="4" textAlign="center">
+              Top TIER Shortener
+            </Heading>
+            <form
+              style={{ marginBottom: "var(--chakra-space-4)" }}
+              onSubmit={form.handleSubmit(handleOnSubmit)}
+            >
+              <FormControl
+                isInvalid={Boolean(form.formState.errors.longUrl)}
+                mb="2"
+              >
+                <FormLabel>Long URL</FormLabel>
+                <Input {...form.register("longUrl")} variant="filled" />
+                <FormHelperText>
+                  {form.formState.errors.longUrl?.message}
+                </FormHelperText>
+              </FormControl>
+              <Button type="submit" width="full" colorScheme="blue">
+                Shorten it
+              </Button>
+            </form>
           </Box>
-        </Box>
-      </Container>
-    </Center>
+        </Container>
+      </Center>
+      {hasLinks ? (
+        <Container
+          overflowY="auto"
+          paddingY="4"
+          borderLeft={["none", "none", "1px solid rgba(0,0,0,0.1)"]}
+          style={{ scrollbarWidth: "thin" }}
+        >
+          <Heading fontSize="xl" mb="4">
+            Links
+          </Heading>
+          {map(
+            (item) => (
+              <LinkDetails
+                key={item.id}
+                id={item.id}
+                originalUrl={item.originalUrl}
+                createdAt={item.createdAt}
+                initialClicks={item.clicks}
+              />
+            ),
+            urls
+          )}
+        </Container>
+      ) : null}
+    </Grid>
   );
 };
 

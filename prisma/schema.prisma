@@ -8,6 +8,8 @@ generator client {
 }
 
 model Url {
-  id          String @id @map("_id")
+  id          String   @id @map("_id")
   originalUrl String
+  createdAt   DateTime @default(now())
+  clicks      Int
 }
