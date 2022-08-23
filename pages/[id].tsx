@@ -2,8 +2,10 @@ import type { GetServerSideProps, NextPage } from "next";
 import { PrismaClient } from "@prisma/client";
 import { inc } from "ramda";
 
+import NotFound from "../components/NotFound";
+
 const Url: NextPage = () => {
-  return <div>404</div>;
+  return <NotFound />;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

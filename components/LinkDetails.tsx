@@ -8,6 +8,8 @@ import {
   Divider,
   useDisclosure,
   Stack,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import axios from "axios";
@@ -34,19 +36,8 @@ function LinkDetails(props: Props) {
   const clipboardValue = `${window.location.href}${id}`;
   const toast = useToast();
   const qrCodeModal = useDisclosure();
-  const { data } = useSWR(
-    `/api/urls/${id}`,
-    () => axios.get(`/api/urls/${id}`),
-    {
-      onError: (err) => {
-        toast({
-          description: err.message,
-          status: "error",
-          duration: 2000,
-          isClosable: true,
-        });
-      },
-    }
+  const { data, error } = useSWR(`/api/urls/${id}`, () =>
+    axios.get(`/api/urls/${id}`)
   );
   const [urls, setUrls] = useLocalStorageValue<undefined | Url[]>("urls", [], {
     initializeWithStorageValue: false,
@@ -69,6 +60,12 @@ function LinkDetails(props: Props) {
     <Box mb="4">
       <Text>{format(new Date(createdAt), "MMM d, kk:mm")}</Text>
       <ClipboardInput label="" value={clipboardValue} />
+      {error ? (
+        <Alert status="error" mb="2" borderRadius="md">
+          <AlertIcon />
+          {error.response.data}
+        </Alert>
+      ) : null}
       <Text fontSize="sm">
         Destination:{" "}
         <Link isExternal href={originalUrl}>
