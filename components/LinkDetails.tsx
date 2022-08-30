@@ -15,15 +15,14 @@ import { format } from "date-fns";
 import axios from "axios";
 import useSWR from "swr";
 import { ImQrcode } from "react-icons/im";
+import { filter } from "ramda";
+import { FiEyeOff } from "react-icons/fi";
+import { useLocalStorageValue } from "@react-hookz/web";
 
+import { Url } from "../types";
 import utils from "../lib/utils";
 import ClipboardInput from "./ClipboardInput";
 import QrCodeModal from "./QrCodeModal";
-import { FiEyeOff } from "react-icons/fi";
-import { useLocalStorageValue } from "@react-hookz/web";
-import { filter } from "ramda";
-
-import { Url } from "../types";
 
 type Props = {
   id: string;
