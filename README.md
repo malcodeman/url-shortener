@@ -1,10 +1,18 @@
-# [ttier](https://ttier.vercel.app)
+<div align="center">
 
 [![Cypress.io tests](https://img.shields.io/badge/cypress.io-tests-green.svg?style=flat-square)](https://cypress.io)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/malcodeman/url-shortener/blob/main/LICENSE)
 
-Top tier url shortener.
+</div>
+<br />
+<div align="center"><strong>ttier</strong></div>
+<div align="center">Top tier url shortener.</div>
+<br />
+<div align="center">
+  <sub>Coded by <a href="https://malcodeman.com">malcodeman</a> 👨‍🚀</sub>
+</div>
+<br />
 
 ![Screenshot](readme/screenshot.png)
 
