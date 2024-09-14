@@ -20,7 +20,7 @@
     "axios": "^1.6.8",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.3.21",
-    "nanoid": "^5.0.4",
+    "nanoid": "^5.0.7",
     "next": "12.2.5",
     "prisma": "^5.18.0",
     "qrcode.react": "^3.1.0",
